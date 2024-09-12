@@ -1,19 +1,29 @@
 import AddIcon from "@mui/icons-material/Add";
 import { IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const AddNoteButton = () => {
+export const AddNoteButton = () => {
+  const navigate = useNavigate();
+
+  const addNoteButton = () => {
+    console.log("yes");
+    navigate("/create-note");
+  };
   return (
     <IconButton
-      className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full p-2 shadow-lg hover:bg-blue-600 transition-colors"
-      style={{ zIndex: 1000 }}
-      onClick={() => {
-        // Handle button click, e.g., open a modal or navigate to a form
-        console.log("Add note button clicked");
+      style={{
+        position: "fixed",
+        bottom: "1.5rem",
+        right: "1.5rem",
+        zIndex: 5,
+        backgroundColor: "white",
+        transform: "scale(1.2)",
+        boxShadow:
+          "0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.2)",
       }}
+      onClick={addNoteButton}
     >
       <AddIcon />
     </IconButton>
   );
 };
-
-export default AddNoteButton;

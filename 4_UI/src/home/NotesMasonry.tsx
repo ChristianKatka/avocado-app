@@ -37,7 +37,7 @@ const breakpointColumnsObj = {
   500: 2, // Two columns for screens 500px and wider
 };
 
-const NotesMasonry = () => {
+export const NotesMasonry = () => {
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
@@ -59,5 +59,3 @@ const NotesMasonry = () => {
     </Masonry>
   );
 };
-
-export default NotesMasonry;
