@@ -1,0 +1,112 @@
+Transform: AWS::Serverless-2016-10-31
+Description: API
+Resources:
+  ApiGatewayHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+        - '*'
+        AllowHeaders:
+        - '*'
+        AllowMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+        MaxAge: 60
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 2
+        ThrottlingRateLimit: 2
+      Auth:
+        Authorizers:
+          CognitoAuthorizer:
+            JwtConfiguration:
+              issuer:
+                Fn::Join:
+                - ''
+                - - Fn::Sub: https://cognito-idp.${AWS::Region}.amazonaws.com/
+                  - Fn::ImportValue: krisu-auth-app---user-pool-id
+              audience:
+              - Fn::ImportValue: krisu-auth-app---user-pool-client-id
+            IdentitySource: $request.header.Authorization
+        DefaultAuthorizer: CognitoAuthorizer
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+  AllowLambdaCloudWatchLogs:
+    Type: AWS::IAM::Policy
+    DependsOn:
+    - LambdaExecutionRole
+    Properties:
+      PolicyName: AllowLambdaDynamoDB
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Resource:
+          - arn:aws:logs:*:*:*
+      Roles:
+      - Ref: LambdaExecutionRole
+  AllowLambdaDynamoDB:
+    Type: AWS::IAM::Policy
+    DependsOn:
+    - LambdaExecutionRole
+    Properties:
+      PolicyName: AllowLambdaDynamoDB
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:*
+          Resource:
+          - '*'
+      Roles:
+      - Ref: LambdaExecutionRole
+  API:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://krisu-auth-app---api-lambda-bucket/9a4082b08d9b3635dfe24bc9a1e21ca3
+      Handler: index.handler
+      MemorySize: 256
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Runtime: nodejs18.x
+      Timeout: 30
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: ApiGatewayHttpApi
+            Path: $default
+            PayloadFormatVersion: '1.0'
+            Method: ANY
+        ApiEventOptions:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: ApiGatewayHttpApi
+            Path: /{proxy+}
+            PayloadFormatVersion: '1.0'
+            Method: OPTIONS
+Outputs:
+  ApiEndoint:
+    Description: API endpoint
+    Value:
+      Fn::Sub: https://${ApiGatewayHttpApi}.execute-api.${AWS::Region}.amazonaws.com

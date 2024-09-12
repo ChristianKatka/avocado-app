@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Amazon Cognito User Pool CloudFormation Template
+
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: krisu-auth-app---user-pool
+      UsernameAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 6
+          RequireUppercase: false
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+      MfaConfiguration: "OFF"
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Required: true
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: krisu-auth-app---user-pool-client
+      UserPoolId: !Ref UserPool
+      RefreshTokenValidity: 60 # refresh token is valid for 2 months, means you have to login every 2 months
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_ADMIN_USER_PASSWORD_AUTH
+
+Outputs:
+  UserPoolId:
+    Description: krisu auth app Cognito User Pool id
+    Value: !Ref UserPool
+    Export:
+      Name: krisu-auth-app---user-pool-id
+
+  UserPoolClientId:
+    Description: krisu auth app Cognito User Pool Client ID
+    Value: !Ref UserPoolClient
+    Export:
+      Name: krisu-auth-app---user-pool-client-id

@@ -1,0 +1,30 @@
+Description: CloudFormation template for creating an S3 bucket for an API Lambda function
+
+Resources:
+  # S3 Bucket for the API Lambda
+  ApiLambdaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketName: krisu-auth-app---api-lambda-bucket
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+              - HEAD
+              - POST
+              - PUT
+              - DELETE
+            AllowedOrigins:
+              - "*"
+            MaxAge: 300
+      Tags:
+        - Key: Name
+          Value: krisu-auth-app---api-lambda-bucket
