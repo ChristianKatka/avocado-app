@@ -1,12 +1,21 @@
-import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Navbar } from "./Navbar";
+import NotesMasonry from "./NotesMasonry";
+import { SearchInput } from "./SearchInput";
+import AddNoteButton from "./AddNoteButton";
 
 export const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center">
-      <p>Hello to avocado app</p>
-    </div>
+    <>
+      <AddNoteButton></AddNoteButton>
+
+      <div className="flex flex-col gap-4 px-2 py-6">
+        <Navbar></Navbar>
+        <SearchInput></SearchInput>
+        <NotesMasonry></NotesMasonry>
+      </div>
+    </>
   );
 };
