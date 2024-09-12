@@ -63,14 +63,14 @@ Resources:
   API:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://krisu-auth-app---auth-api-lambda-bucket/87daf73bb0fcf0ee1dec90d4e893a5a0
+      CodeUri: s3://krisu-auth-app---auth-api-lambda-bucket/0999e107618eb934c54689e798845e3e
       Handler: index.handler
       MemorySize: 256
       Role:
         Fn::GetAtt:
         - LambdaExecutionRole
         - Arn
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       Timeout: 30
       Events:
         ApiEvent:

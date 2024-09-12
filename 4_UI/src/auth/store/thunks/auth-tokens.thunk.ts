@@ -7,6 +7,7 @@ import {
 } from "../services/auth.service";
 import { selectRefreshToken } from "../selectors/auth.selectors";
 import { AuthCredentials } from "../../../models/auth-credentials.model";
+import { handleError } from "../../../shared/handle-error";
 
 // TYPE PROPS::
 // 1. Return type
@@ -25,7 +26,7 @@ export const refreshTokensThunk = createAsyncThunk<
   }
 
   try {
-    return refreshTokensService(refreshToken);
+    return await refreshTokensService(refreshToken);
   } catch (error) {
     console.log("error: auth/refreshTokens");
     console.log(error);
@@ -42,7 +43,12 @@ export const registerThunk = createAsyncThunk<any, AuthCredentials>(
   "auth/register",
   async (credentials, { rejectWithValue }) => {
     try {
-      return registerService(credentials);
+      const res = await registerService(credentials);
+
+      console.log("RESPONSE::");
+
+      console.log(res);
+      return res.AuthenticationResult;
     } catch (error) {
       console.log("error: auth/register");
       console.log(error);
@@ -60,15 +66,19 @@ export const loginThunk = createAsyncThunk<any, AuthCredentials>(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      return loginService(credentials);
-    } catch (error) {
-      console.log("error: auth/login");
-      console.log(error);
+      const res = await loginService(credentials);
 
-      return rejectWithValue({
-        payload: "Failed",
-        error: true,
-      });
+      if (res.error) {
+        console.log("FOUND ERRROR");
+
+        return handleError("error: auth/login", res.error, rejectWithValue);
+      }
+
+      console.log("RESPONSE::");
+      console.log(res);
+      return res;
+    } catch (err) {
+      return handleError("error: auth/login", err, rejectWithValue);
     }
   }
 );

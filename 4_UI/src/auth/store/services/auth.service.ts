@@ -1,6 +1,7 @@
 import { AuthCredentials } from "../../../models/auth-credentials.model";
 
-const AUTH_API_BASE_URL = "https://api.example.com";
+const AUTH_API_BASE_URL =
+  "https://5etkr69fcj.execute-api.eu-west-1.amazonaws.com";
 
 export const loginService = async (credentials: AuthCredentials) => {
   try {
@@ -24,24 +25,15 @@ export const loginService = async (credentials: AuthCredentials) => {
 };
 
 export const registerService = async (credentials: AuthCredentials) => {
-  try {
-    const response = await fetch(`${AUTH_API_BASE_URL}/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
+  const response = await fetch(`${AUTH_API_BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  });
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error posting data:", error);
-    throw error;
-  }
+  return response.json();
 };
 
 export const refreshTokensService = async (refreshToken: string) => {
