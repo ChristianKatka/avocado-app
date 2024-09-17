@@ -1,33 +1,34 @@
 import Masonry from "react-masonry-css";
+import { useNavigate } from "react-router-dom";
 
 const notes = [
   {
-    id: 1,
+    id: "1",
     title: "Note 1",
     text: "This is the first note.This is the first note.This is the first note.",
   },
-  { id: 2, title: "Note 2", text: "This is the second note." },
-  { id: 3, title: "Note 3", text: "This is the third note." },
+  { id: "2", title: "Note 2", text: "This is the second note." },
+  { id: "3", title: "Note 3", text: "This is the third note." },
   {
-    id: 4,
+    id: "4",
     title: "Note 3",
     text: "This is the third note.This is the third note.This is the third note.",
   },
-  { id: 5, title: "Note 3", text: "This is the third note." },
+  { id: "5", title: "Note 3", text: "This is the third note." },
   {
-    id: 6,
+    id: "6",
     title: "Note 1",
     text: "This is the first note.This is the first note.This is the first note.",
   },
-  { id: 7, title: "Note 2", text: "This is the second note." },
-  { id: 8, title: "Note 3", text: "This is the third note." },
+  { id: "7", title: "Note 2", text: "This is the second note." },
+  { id: "8", title: "Note 3", text: "This is the third note." },
   {
-    id: 9,
+    id: "9",
     title: "Note 3",
     text: "This is the third note.This is the third note.This is the third note.",
   },
-  { id: 10, title: "Note 3", text: "This is the third note." },
-  { id: 11, title: "Note 3", text: "This is the third note." },
+  { id: "10", title: "Note 3", text: "This is the third note." },
+  { id: "11", title: "Note 3", text: "This is the third note." },
 ];
 
 const breakpointColumnsObj = {
@@ -38,6 +39,13 @@ const breakpointColumnsObj = {
 };
 
 export const NotesMasonry = () => {
+  const navigate = useNavigate();
+
+  const selectNote = (noteId: string) => {
+    console.log("selected note:", noteId);
+    navigate(`/note/${noteId}`);
+  };
+
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
@@ -47,7 +55,8 @@ export const NotesMasonry = () => {
       {notes.map((note) => (
         <div
           key={note.id}
-          className="bg-white border border-gray-200 rounded-lg shadow-md p-4 flex flex-col mb-4"
+          className="bg-white border border-gray-200 rounded-lg shadow-md p-4 flex flex-col mb-4 cursor-pointer"
+          onClick={() => selectNote(note.id)}
         >
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold">{note.title}</h3>

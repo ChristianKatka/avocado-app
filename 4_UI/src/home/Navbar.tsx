@@ -16,6 +16,10 @@ export const Navbar = () => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const onClose = async () => {
+    setAnchorEl(null);
+  };
+
   const logOut = async () => {
     setAnchorEl(null);
     try {
@@ -26,6 +30,7 @@ export const Navbar = () => {
     }
     dispatch(logOutThunk());
   };
+
   return (
     <>
       <div className="flex justify-between items-center">
@@ -41,7 +46,7 @@ export const Navbar = () => {
           aria-labelledby="demo-positioned-button"
           anchorEl={anchorEl}
           open={open}
-          onClose={logOut}
+          onClose={onClose}
           anchorOrigin={{
             vertical: "top",
             horizontal: "left",
