@@ -44,9 +44,18 @@ export const registerThunk = createAsyncThunk<any, AuthCredentials>(
   async (credentials, { rejectWithValue }) => {
     try {
       const res = await registerService(credentials);
+      if (res?.$metadata?.httpStatusCode === 200) {
+        console.log("HEHEII status koodi oli 200");
+      }
 
-      console.log("RESPONSE::");
-
+      if (res?.errorMessage === "User already exists") {
+        console.log("error user already exists");
+        return rejectWithValue({
+          payload: "Failed",
+          error: true,
+        });
+      }
+      console.log("RESPONSE from service::");
       console.log(res);
       return res.AuthenticationResult;
     } catch (error) {
@@ -75,8 +84,8 @@ export const loginThunk = createAsyncThunk<any, AuthCredentials>(
       }
 
       console.log("RESPONSE::");
-      console.log(res);
-      return res;
+      console.log(res.AuthenticationResult);
+      return res.AuthenticationResult;
     } catch (err) {
       return handleError("error: auth/login", err, rejectWithValue);
     }
@@ -84,14 +93,8 @@ export const loginThunk = createAsyncThunk<any, AuthCredentials>(
 );
 
 export const logOutThunk = createAsyncThunk("auth/logOut", async () => {
-  // Perform log out operations here, such as clearing tokens
-  // Optionally, you can call your log out service or API
-
   console.log("logout thunk");
-
-  // Example: Clear local storage and return
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("authTokens");
 
   return;
 });

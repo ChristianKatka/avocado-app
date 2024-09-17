@@ -1,13 +1,24 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { AuthCredentials } from "../../models/auth-credentials.model";
+import { useAppSelector } from "../../store/hooks";
 import { AppDispatch } from "../../store/store";
+import { selectIsAuthLoading } from "../store/selectors/auth.selectors";
 import { loginThunk } from "../store/thunks/auth-tokens.thunk";
 
 export const Login = () => {
   const dispatch: AppDispatch = useDispatch();
+  const isAuthLoading = useAppSelector(selectIsAuthLoading);
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -15,11 +26,17 @@ export const Login = () => {
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const handleLogin = () => {
-    console.log("LOGIN");
+  const handleLogin = async () => {
     const credentials: AuthCredentials = { email, password };
 
-    dispatch(loginThunk(credentials));
+    try {
+      // Dispatch the thunk and unwrap the result to handle success or failure
+      await dispatch(loginThunk(credentials)).unwrap();
+      // If successful, navigate to the welcome page
+      navigate("/");
+    } catch (err) {
+      console.error("Registration failed", err);
+    }
   };
 
   return (
@@ -62,14 +79,20 @@ export const Login = () => {
       />
 
       {/* Login Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleLogin}
-      >
-        Login
-      </Button>
+      {!isAuthLoading ? (
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleLogin}
+        >
+          Login
+        </Button>
+      ) : (
+        <Button variant="contained" color="primary" fullWidth disabled>
+          <CircularProgress size={24} color="inherit" />
+        </Button>
+      )}
 
       {/* Create Account Link */}
       <p className="text-sm text-gray-600">

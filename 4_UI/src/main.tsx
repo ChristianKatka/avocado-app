@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { App } from "./App.tsx";
 import "./index.css";
 import { store } from "./store/store.ts";
-import AddNoteButton from "./home/AddNoteButton.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

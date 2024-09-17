@@ -1,13 +1,24 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  CircularProgress,
+} from "@mui/material";
 import { useState } from "react";
 import { AuthCredentials } from "../../models/auth-credentials.model";
 import { registerThunk } from "../store/thunks/auth-tokens.thunk";
 import { AppDispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectIsAuthLoading } from "../store/selectors/auth.selectors";
+import { useAppSelector } from "../../store/hooks";
 
 export const Register = () => {
   const dispatch: AppDispatch = useDispatch();
+  const isAuthLoading = useAppSelector(selectIsAuthLoading);
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -15,10 +26,17 @@ export const Register = () => {
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const handleRegister = () => {
-    console.log("REGISTER");
+  const handleRegister = async () => {
     const credentials: AuthCredentials = { email, password };
-    dispatch(registerThunk(credentials));
+
+    try {
+      // Dispatch the thunk and unwrap the result to handle success or failure
+      await dispatch(registerThunk(credentials)).unwrap();
+      // If successful, navigate to the welcome page
+      navigate("/welcome");
+    } catch (err) {
+      console.error("Registration failed", err);
+    }
   };
 
   return (
@@ -61,14 +79,20 @@ export const Register = () => {
       />
 
       {/* Register Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleRegister}
-      >
-        Register
-      </Button>
+      {!isAuthLoading ? (
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleRegister}
+        >
+          Register
+        </Button>
+      ) : (
+        <Button variant="contained" color="primary" fullWidth disabled>
+          <CircularProgress size={24} color="inherit" />
+        </Button>
+      )}
 
       {/* Login Link */}
       <p className="text-sm text-gray-600">

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 import {
   loginThunk,
+  logOutThunk,
   refreshTokensThunk,
   registerThunk,
 } from "../thunks/auth-tokens.thunk";
@@ -45,7 +46,9 @@ const authTokensSlice = createSlice({
           action.payload
         );
         state.decodedAccessToken = jwtDecode(action.payload.AccessToken);
-      });
+      })
+
+      .addCase(logOutThunk.fulfilled, () => initialState);
   },
 });
 
