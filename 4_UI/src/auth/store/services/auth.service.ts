@@ -43,7 +43,7 @@ export const refreshTokensService = async (refreshToken: string) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(refreshToken),
+      body: JSON.stringify({ refreshToken }),
     });
 
     if (!response.ok) {

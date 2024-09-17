@@ -26,7 +26,10 @@ export const refreshTokensThunk = createAsyncThunk<
   }
 
   try {
-    return await refreshTokensService(refreshToken);
+    const res = await refreshTokensService(refreshToken);
+    console.log("RESPONSE from service::");
+    console.log(res);
+    return res.AuthenticationResult;
   } catch (error) {
     console.log("error: auth/refreshTokens");
     console.log(error);

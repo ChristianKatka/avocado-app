@@ -33,3 +33,8 @@ export const selectIsAuthenticated = createSelector(
     return jwtExpirationMinus5Seconds > epochDateTimeNowInSeconds;
   }
 );
+
+export const selectDecodedAccessToken = createSelector(
+  [selectAuthTokensState],
+  (state: AuthTokensState) => state.decodedAccessToken
+);

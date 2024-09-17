@@ -1,15 +1,54 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Login } from "./auth/components/Login";
 import { Register } from "./auth/components/Register";
+import {
+  selectDecodedAccessToken,
+  selectIsAuthenticated,
+} from "./auth/store/selectors/auth.selectors";
+import {
+  logOutThunk,
+  refreshTokensThunk,
+} from "./auth/store/thunks/auth-tokens.thunk";
 import { CreateNote } from "./create-note/CreateNote";
+import { ProtectedRouteGuard } from "./guards/protectedRouteGuard";
 import { Home } from "./home/Home";
 import { About } from "./shared/About";
 import { NotFound } from "./shared/NotFound";
 import { Welcome } from "./shared/Welcome";
-import { ProtectedRouteGuard } from "./guards/protectedRouteGuard";
+import { useAppSelector } from "./store/hooks";
+import { AppDispatch } from "./store/store";
 
 export const App = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const decodedAccessToken = useAppSelector(selectDecodedAccessToken);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
+  useEffect(() => {
+    if (!isAuthenticated || !decodedAccessToken) return;
+
+    const refreshTokenIfNeeded = async () => {
+      try {
+        const epochDateTimeNowInSeconds = Math.floor(Date.now() / 1000);
+        const jwtExpirationTime = decodedAccessToken.exp;
+        const tenMinutesInSeconds = 10 * 60;
+        const jwtExpirationMinusTenMinutes =
+          jwtExpirationTime - tenMinutesInSeconds;
+
+        // Check if current time is within the 10-minute window before token expiration
+        if (jwtExpirationMinusTenMinutes <= epochDateTimeNowInSeconds) {
+          await dispatch(refreshTokensThunk()).unwrap();
+        }
+      } catch (error) {
+        console.error("Error refreshing token:", error);
+        dispatch(logOutThunk());
+      }
+    };
+    refreshTokenIfNeeded();
+  }, [isAuthenticated, decodedAccessToken, dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
