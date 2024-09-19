@@ -45,12 +45,12 @@ Resources:
             Service: lambda.amazonaws.com
           Action: sts:AssumeRole
 
-  AllowLambdaCloudWatchLogs:
+  AllowLambdaPolicy:
     Type: AWS::IAM::Policy
     DependsOn:
       - LambdaExecutionRole
     Properties:
-      PolicyName: "AllowLambdaDynamoDB"
+      PolicyName: "AllowLambdaCloudWatch"
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -61,23 +61,14 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - arn:aws:logs:*:*:*
-      Roles:
-        - !Ref LambdaExecutionRole
-
-  AllowLambdaDynamoDB:
-    Type: AWS::IAM::Policy
-    DependsOn:
-      - LambdaExecutionRole
-    Properties:
-      PolicyName: "AllowLambdaDynamoDB"
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
           - Effect: Allow
             Action:
-              - dynamodb:*
+              - dynamodb:Scan
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
             Resource:
-              - "*"
+              - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/krisu-auth-app---notes
       Roles:
         - !Ref LambdaExecutionRole
 

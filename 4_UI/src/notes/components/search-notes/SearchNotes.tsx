@@ -1,6 +1,6 @@
 import { Search } from "@mui/icons-material"; // Optional, for an inline SVG search icon
 
-export const SearchInput = () => {
+export const SearchNotes = () => {
   return (
     <div className="flex items-center bg-white rounded-3xl p-2 shadow-sm">
       <Search className="text-gray-500 mr-2" />

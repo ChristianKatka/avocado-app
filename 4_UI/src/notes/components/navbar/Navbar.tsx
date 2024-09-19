@@ -1,11 +1,11 @@
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
-import profileImage from "../assets/profile-image.jpg";
-import { AppDispatch } from "../store/store";
+import profileImage from "../../../assets/profile-image.jpg";
 import { useDispatch } from "react-redux";
-import { logOutThunk } from "../auth/store/thunks/auth-tokens.thunk";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../../store/store";
+import { logOutThunk } from "../../../auth/store/thunks/auth-tokens.thunk";
 
 export const Navbar = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -28,7 +28,6 @@ export const Navbar = () => {
     } catch (error) {
       console.log("error", error);
     }
-    dispatch(logOutThunk());
   };
 
   return (

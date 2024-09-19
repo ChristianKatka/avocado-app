@@ -14,7 +14,7 @@ import {
 } from "./auth/store/thunks/auth-tokens.thunk";
 import { CreateNote } from "./create-note/CreateNote";
 import { ProtectedRouteGuard } from "./guards/protectedRouteGuard";
-import { Home } from "./home/Home";
+import { NoteHome } from "./notes/components/NoteHome";
 import { About } from "./shared/About";
 import { NotFound } from "./shared/NotFound";
 import { Welcome } from "./shared/Welcome";
@@ -62,7 +62,7 @@ export const App = () => {
           path="/"
           element={
             <ProtectedRouteGuard>
-              <Home />
+              <NoteHome />
             </ProtectedRouteGuard>
           }
         />

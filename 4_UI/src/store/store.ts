@@ -3,10 +3,12 @@ import { authTokensReducer } from "../auth/store/slices/auth-tokens.slice";
 import { authUIReducer } from "../auth/store/slices/auth-ui.slice";
 import { loadState } from "./localstorage-store-sync/load-state";
 import { saveState } from "./localstorage-store-sync/save-state";
+import { notesReducer } from "../notes/store/slices/notes.slice";
 
 const appReducer = combineReducers({
   authTokens: authTokensReducer,
   authUi: authUIReducer,
+  notes: notesReducer,
 });
 
 const rootReducer = (state: RootState, action: Action) => {

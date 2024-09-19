@@ -2,7 +2,10 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export const CreateNoteNavbar = () => {
+interface Props {
+  createNoteDraft: (noteDraft: any) => void;
+}
+export const CreateNoteNavbar = ({ createNoteDraft }: Props) => {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -14,7 +17,13 @@ export const CreateNoteNavbar = () => {
         <IconButton onClick={goBack}>
           <ArrowBackIosIcon />
         </IconButton>
-        <a style={{ color: "#007AFF" }}>Save</a>
+        <a
+          onClick={createNoteDraft}
+          className="cursor-pointer"
+          style={{ color: "#007AFF" }}
+        >
+          Save
+        </a>
       </div>
     </>
   );

@@ -38,7 +38,7 @@ const breakpointColumnsObj = {
   500: 2, // Two columns for screens 500px and wider
 };
 
-export const NotesMasonry = () => {
+export const Notes = () => {
   const navigate = useNavigate();
 
   const selectNote = (noteId: string) => {
