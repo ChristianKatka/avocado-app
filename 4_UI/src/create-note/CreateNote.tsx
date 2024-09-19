@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { CreateNoteNavbar } from "./CreateNoteNavbar";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../store/store";
+import { useAppDispatch } from "../store/hooks";
+import { createNoteThunk } from "../notes/store/thunks/notes.thunk";
 
 export const CreateNote = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const now = new Date().toISOString();
   const date = new Date(now); // This is here for read component TODO FIX MODIFY
   const formattedDate = date.toLocaleDateString("en-GB", {
@@ -26,10 +33,18 @@ export const CreateNote = () => {
     }));
   };
 
-  const onCreateNoteDraft = () => {
+  const onCreateNoteDraft = async () => {
     console.log("save this note:");
     const noteDraft = { ...note, timestamp: now };
     console.log(noteDraft);
+
+    try {
+      // Dispatch the thunk and unwrap the result to handle success or failure
+      await dispatch(createNoteThunk(noteDraft)).unwrap();
+      navigate("/");
+    } catch (err) {
+      console.error("create note failed", err);
+    }
   };
 
   return (

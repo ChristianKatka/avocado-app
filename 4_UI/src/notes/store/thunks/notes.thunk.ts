@@ -33,6 +33,9 @@ export const createNoteThunk = createAsyncThunk<Note, NoteDraft>(
   async (noteDraft, { rejectWithValue }) => {
     try {
       const note: Note = await createNoteService(noteDraft);
+      console.log("api res note:");
+      console.log(note);
+
       return note;
     } catch (err) {
       return handleError("error: notes/create", err, rejectWithValue);
