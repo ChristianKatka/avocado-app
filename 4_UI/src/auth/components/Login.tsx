@@ -14,6 +14,7 @@ import { useAppSelector } from "../../store/hooks";
 import { AppDispatch } from "../../store/store";
 import { selectIsAuthLoading } from "../store/selectors/auth.selectors";
 import { loginThunk } from "../store/thunks/auth-tokens.thunk";
+import avocado from "../../assets/avocado.svg";
 
 export const Login = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -42,11 +43,7 @@ export const Login = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-12 px-6">
       {/* Logo Placeholder */}
-      <img
-        src="https://picsum.photos/300/300"
-        alt="Avocado App Logo"
-        className="w-20 h-20"
-      />
+      <img src={avocado} alt="Avocado App Logo" className="w-24 h-24" />
 
       <h1 className="text-3xl font-bold mb-6">LOGIN</h1>
 
