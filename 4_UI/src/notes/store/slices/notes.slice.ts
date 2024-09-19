@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { logOutThunk } from "../../../auth/store/thunks/auth-tokens.thunk";
 import { Note } from "../../../models/note.model";
 import { arrayToDictionary } from "../../../shared/helpers/array-to-dictionary";
@@ -12,17 +12,23 @@ import {
 export interface NotesState {
   notes: { [id: string]: Note };
   isLoading: boolean;
+  searchTerm: string;
 }
 
 const initialState: NotesState = {
   notes: {},
   isLoading: false,
+  searchTerm: "",
 };
 
 const notesSlice = createSlice({
   name: "notes",
   initialState,
-  reducers: {},
+  reducers: {
+    searchFromNotes: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
 
@@ -57,7 +63,7 @@ const notesSlice = createSlice({
       .addCase(deleteNoteThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.notes = deleteItemByKeyFromGivenDictionary(
-          action.payload,
+          action.payload.id,
           state.notes
         );
       })
@@ -68,5 +74,6 @@ const notesSlice = createSlice({
       .addCase(logOutThunk.fulfilled, () => initialState);
   },
 });
+export const { searchFromNotes } = notesSlice.actions;
 
 export const notesReducer = notesSlice.reducer;

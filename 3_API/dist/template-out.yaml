@@ -60,10 +60,7 @@ Resources:
           - arn:aws:logs:*:*:*
         - Effect: Allow
           Action:
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:UpdateItem
+          - dynamodb:*
           Resource:
           - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/krisu-auth-app---notes
       Roles:
@@ -71,7 +68,7 @@ Resources:
   API:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://krisu-auth-app---api-lambda-bucket/d5efd1ea67534846afe45481a1598e6a
+      CodeUri: s3://krisu-auth-app---api-lambda-bucket/30b9e41676c7bfae84936d7d9cc5a448
       Handler: index.handler
       MemorySize: 256
       Role:

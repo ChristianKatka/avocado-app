@@ -1,35 +1,10 @@
+import DeleteIcon from "@mui/icons-material/delete";
+import { IconButton } from "@mui/material";
 import Masonry from "react-masonry-css";
 import { useNavigate } from "react-router-dom";
-
-const notes = [
-  {
-    id: "1",
-    title: "Note 1",
-    text: "This is the first note.This is the first note.This is the first note.",
-  },
-  { id: "2", title: "Note 2", text: "This is the second note." },
-  { id: "3", title: "Note 3", text: "This is the third note." },
-  {
-    id: "4",
-    title: "Note 3",
-    text: "This is the third note.This is the third note.This is the third note.",
-  },
-  { id: "5", title: "Note 3", text: "This is the third note." },
-  {
-    id: "6",
-    title: "Note 1",
-    text: "This is the first note.This is the first note.This is the first note.",
-  },
-  { id: "7", title: "Note 2", text: "This is the second note." },
-  { id: "8", title: "Note 3", text: "This is the third note." },
-  {
-    id: "9",
-    title: "Note 3",
-    text: "This is the third note.This is the third note.This is the third note.",
-  },
-  { id: "10", title: "Note 3", text: "This is the third note." },
-  { id: "11", title: "Note 3", text: "This is the third note." },
-];
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { selectNotes } from "../../store/selectors/notes.selectors";
+import { deleteNoteThunk } from "../../store/thunks/notes.thunk";
 
 const breakpointColumnsObj = {
   default: 2, // Two columns for default (larger screens)
@@ -39,11 +14,18 @@ const breakpointColumnsObj = {
 };
 
 export const Notes = () => {
+  const notes = useAppSelector(selectNotes);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const selectNote = (noteId: string) => {
     console.log("selected note:", noteId);
     navigate(`/note/${noteId}`);
+  };
+
+  const deleteNote = (event: React.MouseEvent<HTMLElement>, noteId: string) => {
+    event.stopPropagation(); // Prevent the parent div's onClick
+    dispatch(deleteNoteThunk(noteId));
   };
 
   return (
@@ -60,7 +42,9 @@ export const Notes = () => {
         >
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold">{note.title}</h3>
-            <span className="text-gray-500 cursor-pointer">•••</span>
+            <IconButton onClick={(event) => deleteNote(event, note.id)}>
+              <DeleteIcon />
+            </IconButton>
           </div>
           <p className="text-gray-600 mt-2">{note.text}</p>
         </div>

@@ -48,6 +48,9 @@ export const deleteNoteThunk = createAsyncThunk<any, any>(
   async (noteId, { rejectWithValue }) => {
     try {
       const res = await deleteNoteService(noteId);
+      console.log("api res:");
+      console.log(res);
+
       return res;
     } catch (err) {
       return handleError("error: notes/delete", err, rejectWithValue);
