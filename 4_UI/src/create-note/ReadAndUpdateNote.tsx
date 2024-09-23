@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createNoteThunk } from "../notes/store/thunks/notes.thunk";
-import { useAppDispatch } from "../store/hooks";
+import React, { useEffect, useState } from "react";
+import { selectSelectedNote } from "../notes/store/selectors/notes.selectors";
+import { useAppSelector } from "../store/hooks";
 import { CreateNoteNavbar } from "./create-note-navbar/CreateNoteNavbar";
+import { Note } from "../models/note.model";
 
-export const CreateNote = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+export const ReadAndUpdateNote = () => {
+  const selectedNote: Note = useAppSelector(selectSelectedNote);
 
   const now = new Date().toISOString();
   const date = new Date(now); // This is here for read component TODO FIX MODIFY
@@ -18,9 +17,28 @@ export const CreateNote = () => {
   });
 
   const [note, setNote] = useState({
-    title: "My Title",
-    text: "Write something here...",
+    title: "",
+    text: "",
+    timestamp: "",
   });
+
+  useEffect(() => {
+    if (selectedNote) {
+      setNote({
+        title: selectedNote.title,
+        text: selectedNote.text,
+        timestamp: new Date(selectedNote.timestamp).toLocaleDateString(
+          "en-GB",
+          {
+            weekday: "short",
+            day: "numeric",
+            month: "short",
+            year: "2-digit",
+          }
+        ),
+      });
+    }
+  }, [selectedNote]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -32,23 +50,14 @@ export const CreateNote = () => {
     }));
   };
 
-  const onCreateNoteDraft = async () => {
-    console.log("save this note:");
-    const noteDraft = { ...note, timestamp: now };
-    console.log(noteDraft);
-
-    try {
-      // Dispatch the thunk and unwrap the result to handle success or failure
-      await dispatch(createNoteThunk(noteDraft)).unwrap();
-      navigate("/");
-    } catch (err) {
-      console.error("create note failed", err);
-    }
+  const onUpdateNote = async () => {
+    console.log("update this note:");
+    console.log(note);
   };
 
   return (
     <div className="flex flex-col gap-4 px-2 py-3">
-      <CreateNoteNavbar createNoteDraft={onCreateNoteDraft} />
+      <CreateNoteNavbar createNoteDraft={onUpdateNote} />
       <div className="flex flex-col gap-4">
         <input
           type="text"

@@ -13,12 +13,14 @@ export interface NotesState {
   notes: { [id: string]: Note };
   isLoading: boolean;
   searchTerm: string;
+  selectedNote: string;
 }
 
 const initialState: NotesState = {
   notes: {},
   isLoading: false,
   searchTerm: "",
+  selectedNote: "",
 };
 
 const notesSlice = createSlice({
@@ -27,6 +29,9 @@ const notesSlice = createSlice({
   reducers: {
     searchFromNotes: (state, action: PayloadAction<string>) => {
       state.searchTerm = action.payload;
+    },
+    selectNoteAction: (state, action: PayloadAction<string>) => {
+      state.selectedNote = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -74,6 +79,6 @@ const notesSlice = createSlice({
       .addCase(logOutThunk.fulfilled, () => initialState);
   },
 });
-export const { searchFromNotes } = notesSlice.actions;
+export const { searchFromNotes, selectNoteAction } = notesSlice.actions;
 
 export const notesReducer = notesSlice.reducer;

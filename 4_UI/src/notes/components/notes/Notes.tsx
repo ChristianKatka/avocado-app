@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { selectNotes } from "../../store/selectors/notes.selectors";
 import { deleteNoteThunk } from "../../store/thunks/notes.thunk";
+import { selectNoteAction } from "../../store/slices/notes.slice";
 
 const breakpointColumnsObj = {
   default: 2, // Two columns for default (larger screens)
@@ -21,6 +22,7 @@ export const Notes = () => {
   const selectNote = (noteId: string) => {
     console.log("selected note:", noteId);
     navigate(`/note/${noteId}`);
+    dispatch(selectNoteAction(noteId));
   };
 
   const deleteNote = (event: React.MouseEvent<HTMLElement>, noteId: string) => {

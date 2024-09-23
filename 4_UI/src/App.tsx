@@ -20,7 +20,7 @@ import { NotFound } from "./shared/NotFound";
 import { Welcome } from "./shared/Welcome";
 import { useAppSelector } from "./store/hooks";
 import { AppDispatch } from "./store/store";
-import { NoteReadAndUpdate } from "./create-note/NoteReadAndUpdate";
+import { ReadAndUpdateNote } from "./create-note/ReadAndUpdateNote";
 
 export const App = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -98,7 +98,7 @@ export const App = () => {
           path="/note/:noteId"
           element={
             <ProtectedRouteGuard>
-              <NoteReadAndUpdate />
+              <ReadAndUpdateNote />
             </ProtectedRouteGuard>
           }
         />
