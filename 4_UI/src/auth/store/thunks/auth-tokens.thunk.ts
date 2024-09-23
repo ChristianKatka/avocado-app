@@ -48,7 +48,7 @@ export const registerThunk = createAsyncThunk<any, AuthCredentials>(
     try {
       const res = await registerService(credentials);
       if (res?.$metadata?.httpStatusCode === 200) {
-        console.log("HEHEII status koodi oli 200");
+        console.log("status code 200");
       }
 
       if (res?.errorMessage === "User already exists") {

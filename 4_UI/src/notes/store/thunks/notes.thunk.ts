@@ -18,8 +18,6 @@ export const getNotesThunk = createAsyncThunk<Note[], void>(
   async (_, { rejectWithValue }) => {
     try {
       const notes = await getNotesService();
-      console.log("HERES NOTES:::");
-      console.log(notes);
 
       return notes;
     } catch (err) {

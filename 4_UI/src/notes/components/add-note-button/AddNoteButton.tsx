@@ -6,7 +6,6 @@ export const AddNoteButton = () => {
   const navigate = useNavigate();
 
   const addNoteButton = () => {
-    console.log("yes");
     navigate("/create-note");
   };
   return (
